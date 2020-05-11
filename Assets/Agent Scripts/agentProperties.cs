@@ -28,7 +28,7 @@ public class agentProperties : MonoBehaviour
         CheckInfected();
         infectionChance = .1f;
         infectionRadius = 6f;
-        reach = 5f;
+        reach = 10f;
 
         orb.SetActive(false);
 
@@ -174,12 +174,14 @@ public class agentProperties : MonoBehaviour
         if (Physics.Raycast(transform.position, fwd, out hit, reach) && (hit.transform.CompareTag("Door")))
         {
             GameObject door = hit.transform.gameObject;
+            door.GetComponent<doorProperties>().MoveDoor();
+
             if (infected && !door.GetComponent<doorProperties>().infected)
             {
                 infectDoor(door);
             }
 
-            door.GetComponent<doorProperties>().MoveDoor();
+    
 
         }
     }
