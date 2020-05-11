@@ -69,6 +69,8 @@
     <Compile Include="Assets\Agent Scripts\BTs\NormalBT.cs" />
     <Compile Include="Assets\Agent Scripts\BTs\NurseBT.cs" />
     <Compile Include="Assets\Agent Scripts\doorProperties.cs" />
+    <Compile Include="Assets\Agent Scripts\floatingOrb.cs" />
+    <Compile Include="Assets\Agent Scripts\List.cs" />
     <Compile Include="Assets\Ameye\Alex's Door System Lite\Scripts\DoorDetectionLite.cs" />
     <Compile Include="Assets\Ameye\Alex's Door System Lite\Scripts\DoorRotationLite.cs" />
     <Compile Include="Assets\Ameye\Alex's Door System Lite\Scripts\Helper Scripts\ConditionalHideAttribute.cs" />

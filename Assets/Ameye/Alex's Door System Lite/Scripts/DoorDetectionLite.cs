@@ -28,7 +28,7 @@ public class DoorDetectionLite : MonoBehaviour
         gameObject.name = "Player";
         gameObject.tag = "Player";
 
-        if (CrosshairPrefab == null) Debug.Log("<color=yellow><b>No CrosshairPrefab was found.</b></color>"); // Return an error if no crosshair was specified
+      /*  if (CrosshairPrefab == null) Debug.Log("<color=yellow><b>No CrosshairPrefab was found.</b></color>"); // Return an error if no crosshair was specified
 
         else
         {
@@ -36,7 +36,7 @@ public class DoorDetectionLite : MonoBehaviour
             CrosshairPrefabInstance.transform.SetParent(transform, true); // Make the player the parent object of the crosshair prefab
         }
 
-        if (TextPrefab == null) Debug.Log("<color=yellow><b>No TextPrefab was found.</b></color>"); // Return an error if no text element was specified
+        if (TextPrefab == null) Debug.Log("<color=yellow><b>No TextPrefab was found.</b></color>"); // Return an error if no text element was specified*/
     }
 
     void Update()
