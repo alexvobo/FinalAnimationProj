@@ -64,10 +64,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Agent Scripts\agentProperties.cs" />
-    <Compile Include="Assets\Agent Scripts\DoctorBT.cs" />
-    <Compile Include="Assets\Agent Scripts\InfectedBT.cs" />
-    <Compile Include="Assets\Agent Scripts\NormalBT.cs" />
-    <Compile Include="Assets\Agent Scripts\NurseBT.cs" />
+    <Compile Include="Assets\Agent Scripts\BTs\DoctorBT.cs" />
+    <Compile Include="Assets\Agent Scripts\BTs\InfectedBT.cs" />
+    <Compile Include="Assets\Agent Scripts\BTs\NormalBT.cs" />
+    <Compile Include="Assets\Agent Scripts\BTs\NurseBT.cs" />
+    <Compile Include="Assets\Agent Scripts\doorProperties.cs" />
     <Compile Include="Assets\Ameye\Alex's Door System Lite\Scripts\DoorDetectionLite.cs" />
     <Compile Include="Assets\Ameye\Alex's Door System Lite\Scripts\DoorRotationLite.cs" />
     <Compile Include="Assets\Ameye\Alex's Door System Lite\Scripts\Helper Scripts\ConditionalHideAttribute.cs" />

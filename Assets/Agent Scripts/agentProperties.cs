@@ -5,18 +5,32 @@ using UnityEngine;
 
 public class agentProperties : MonoBehaviour
 {
-    public Boolean mask = false;
-    public Boolean infected = false;
+    public bool mask; // has mask
+    public float maskChance; //chance to get mask, .3 = 30%
+
+    public bool infected; // is infected
+    public float infectionChance; // chance of infecting something, .1 = 10%
+
+    public float reach; // distance for agent to open door 
+
     // Start is called before the first frame update
     void Start()
     {
+        mask = false;
+        maskChance = .3f;
+        infected = false;
+        infectionChance = .1f;
+
+        reach = 5f;
+
         GetMask();
         CheckInfected();
     }
+
     #region mask stuff
-    private Boolean DeservesMask()
+    private bool DeservesMask()
     {
-        if (UnityEngine.Random.value > 0.7) //%30 percent chance
+        if (UnityEngine.Random.value > (1-maskChance))
         {
             return true;
         }
@@ -51,10 +65,43 @@ public class agentProperties : MonoBehaviour
             infected = false;
         }
     }
+    public void infectDoor(GameObject door)
+    {
+        var rand = UnityEngine.Random.Range(0f, 1f);
+        if (rand > (1-infectionChance))
+        {
+            print((1 - infectionChance) + " " + rand);
+            door.GetComponent<doorProperties>().infected = true;
+            door.GetComponent<Renderer>().material.color = Color.red;
+        }
+    }
+    #endregion
+
+
+    #region Door Movement
+
+    public void DetectDoor()
+    {
+        Vector3 fwd = transform.TransformDirection(Vector3.forward);
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, fwd, out hit, reach) && (hit.transform.CompareTag("Door")))
+        {
+            GameObject door = hit.transform.gameObject;
+
+            if (infected && !door.GetComponent<doorProperties>().infected)
+            {
+                infectDoor(door);
+            }
+
+            door.GetComponent<doorProperties>().MoveDoor();
+
+        }
+    }
     #endregion
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-
+        DetectDoor();
     }
 }
