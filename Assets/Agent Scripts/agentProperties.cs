@@ -18,6 +18,7 @@ public class agentProperties : MonoBehaviour
 
     public Dictionary<GameObject, bool> perceivedNeighbors = new Dictionary<GameObject, bool>();
 
+    public GameObject assignedNurse, assignedDoctor;
     public GameObject orb;
     // Start is called before the first frame update
     void Start()
@@ -29,7 +30,8 @@ public class agentProperties : MonoBehaviour
         infectionChance = .1f;
         infectionRadius = 6f;
         reach = 10f;
-
+        assignedNurse = new GameObject();
+        assignedDoctor = new GameObject();
         orb.SetActive(false);
 
         GetComponent<CapsuleCollider>().radius = infectionRadius / 2;
@@ -181,7 +183,7 @@ public class agentProperties : MonoBehaviour
                 infectDoor(door);
             }
 
-    
+
 
         }
     }

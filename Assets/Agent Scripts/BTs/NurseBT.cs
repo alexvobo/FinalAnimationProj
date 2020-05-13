@@ -7,22 +7,28 @@ using RootMotion.FinalIK;
 public class NurseBT : MonoBehaviour
 {
     public GameObject NursePrefab;
-    public int numDoctors;
-    public float spawnRate;
+    public int numNurses;
 
-    private List<GameObject> nurses = new List<GameObject>();
+    public List<GameObject> nurses = new List<GameObject>();
 
 
     private BehaviorAgent behaviorAgent;
 
+    private ManagerScript manager;
+
     // Use this for initialization
     void Start()
     {
+        numNurses = 2;
         spawnAgent();
-
+        manager = GameObject.Find("Manager").GetComponent<ManagerScript>();
         behaviorAgent = new BehaviorAgent(this.BuildTreeRoot());
         BehaviorManager.Instance.Register(behaviorAgent);
         behaviorAgent.StartBehavior();
+    }
+    public List<GameObject> GetNurses()
+    {
+        return nurses;
     }
     #region Spawn Agents
     public void spawnAgent()
@@ -35,16 +41,20 @@ public class NurseBT : MonoBehaviour
         float MinZ = 14.5f;
         float MaxZ = 27;
 
-        float x = Random.Range(MinX, MaxX);
-        float z = Random.Range(MinZ, MaxZ);
+        for (var i = 0; i < numNurses; i++)
+        {
+            float x = Random.Range(MinX, MaxX);
+            float z = Random.Range(MinZ, MaxZ);
 
-        print("nurs" + new Vector3(x, .5f, z));
+            print("nurs" + new Vector3(x, .5f, z));
 
-        var agent = Instantiate(NursePrefab, new Vector3(x, 0f, z), Quaternion.identity);
+            var agent = Instantiate(NursePrefab, new Vector3(x, 0f, z), Quaternion.identity);
 
-        agent.transform.parent = parent.transform;
+            agent.transform.parent = parent.transform;
 
-        nurses.Add(agent);
+            nurses.Add(agent);
+        }
+
 
     }
     #endregion
@@ -98,76 +108,91 @@ public class NurseBT : MonoBehaviour
         Val<Vector3> position = Val.V(() => target.position);
         return new Sequence(nurses[0].GetComponent<BehaviorMecanim>().Node_GoTo(position), new LeafWait(1000));
     }
+    protected virtual RunStatus PatientAvailable()
+    {
+      
+            return RunStatus.Success;
+    }
     protected Node BuildTreeRoot()
     {
-        Node roaming = new Sequence(
-                        this.ST_ApproachAndWait(nurses[0], GameObject.Find("Lobby").transform),
-                        new LeafWait(5000));
+        //success condition for decorator ^^^^ = restart from beginning
+        Node roaming = new DecoratorLoop(
+                         new LeafInvoke(() => PatientAvailable())
+                         );
+        //goToInfectedBed(),
+
         /* new DecoratorLoop(
              new Sequence(this.PickUp(participant), this.PutDown(participant)))
          );*/
         return roaming;
     }
 
-    private Node goToInfectedPatientBed() {
-      var seq = new Sequence(
-      this.ST_ApproachAndWait(nurses[0], GameObject.Find("Beds/bed").transform),
-      new LeafWait(2)
-      );
 
-      return seq;
+    private Node goToInfectedPatientBed()
+    {
+        var seq = new Sequence(
+        this.ST_ApproachAndWait(nurses[0], GameObject.Find("Beds/bed").transform),
+        new LeafWait(2)
+        );
+
+        return seq;
     }
 
-    private Node goToNormalPatientBed() {
-      var seq = new Sequence(
-      this.ST_ApproachAndWait(nurses[0], GameObject.Find("Big Room/bed").transform),
-      new LeafWait(2)
-      );
+    private Node goToNormalPatientBed()
+    {
+        var seq = new Sequence(
+        this.ST_ApproachAndWait(nurses[0], GameObject.Find("Big Room/bed").transform),
+        new LeafWait(2)
+        );
 
-      return seq;
+        return seq;
     }
 
-    private Node goToLounge() {
-      var seq = new Sequence(
-      this.ST_ApproachAndWait(nurses[0], GameObject.Find("Employee Lounge").transform),
-      new LeafWait(2)
-      );
+    private Node goToLounge()
+    {
+        var seq = new Sequence(
+        this.ST_ApproachAndWait(nurses[0], GameObject.Find("Employee Lounge").transform),
+        new LeafWait(2)
+        );
+        //remove nurse from manager
 
-      return seq;
+        return seq;
     }
 
-    private Node exitHospital() {
-      var seq = new Sequence(
-      this.ST_ApproachAndWait(nurses[0], GameObject.Find("ExitHospital").transform),
-      new LeafWait(2)
-      );
+    private Node exitHospital()
+    {
+        var seq = new Sequence(
+        this.ST_ApproachAndWait(nurses[0], GameObject.Find("ExitHospital").transform),
+        new LeafWait(2)
+        );
 
-      return seq;
+        return seq;
     }
 
-// Check infection
-// If Patient is infected
-//    Nurse takes patient to COVID area
-// If Patient is NOT infected
-//    Nurse takes patient to regular area
-    private Node checkInfection() {
+    // Check infection
+    // If Patient is infected
+    //    Nurse takes patient to COVID area
+    // If Patient is NOT infected
+    //    Nurse takes patient to regular area
+    private Node checkInfection()
+    {
 
-      var seq = new Sequence();
+        var seq = new Sequence();
 
-// need to synchronize patients
-      // if(patients[0].GetComponent<agentProperties>().CompareTag("Infected")) {
-      //     return new Sequence(
-      //     goToInfectedPatientBed(),
-      //     new LeafWait(2)
-      //     );
-      // } else {
-      //   return new Sequence(
-      //    goToNormalPatientBed(),
-      //    new LeafWait(2)
-      //   );
-      // }
+        // need to synchronize patients
+        // if(patients[0].GetComponent<agentProperties>().CompareTag("Infected")) {
+        //     return new Sequence(
+        //     goToInfectedPatientBed(),
+        //     new LeafWait(2)
+        //     );
+        // } else {
+        //   return new Sequence(
+        //    goToNormalPatientBed(),
+        //    new LeafWait(2)
+        //   );
+        // }
 
-      return null;
+        return seq;
 
     }
 }

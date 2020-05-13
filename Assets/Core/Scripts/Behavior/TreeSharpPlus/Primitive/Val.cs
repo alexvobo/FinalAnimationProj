@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace TreeSharpPlus
 {
@@ -42,6 +43,7 @@ namespace TreeSharpPlus
         /// this to false will cause the function to fetch whenever accessed.
         /// </summary>
         public bool UseCache;
+        private Func<GameObject> getter1;
 
         public Val(T value)
         {
@@ -58,6 +60,11 @@ namespace TreeSharpPlus
             this.getter = getter;
             this.UseCache = useCache;
             this.valid = false;
+        }
+
+        public Val(Func<GameObject> getter1)
+        {
+            this.getter1 = getter1;
         }
 
         public T Value

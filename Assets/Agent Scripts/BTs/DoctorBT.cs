@@ -4,25 +4,33 @@ using UnityEngine;
 using TreeSharpPlus;
 using RootMotion.FinalIK;
 
+
 public class DoctorBT : MonoBehaviour
 {
     public GameObject DoctorPrefab;
     public int numDoctors;
-    public float spawnRate;
 
-    private List<GameObject> doctors = new List<GameObject>();
-
+    public List<GameObject> doctors;
 
     private BehaviorAgent behaviorAgent;
+
+    private ManagerScript manager;
+
 
     // Use this for initialization
     void Start()
     {
+        doctors = new List<GameObject>();
+        numDoctors = 2;
         spawnAgent();
-
+        manager = GameObject.Find("Manager").GetComponent<ManagerScript>();
         behaviorAgent = new BehaviorAgent(this.BuildTreeRoot());
         BehaviorManager.Instance.Register(behaviorAgent);
         behaviorAgent.StartBehavior();
+    }
+    public List<GameObject> GetDoctors()
+    {
+        return doctors;
     }
     #region Spawn Agents
     public void spawnAgent()
@@ -35,15 +43,19 @@ public class DoctorBT : MonoBehaviour
         float MinZ = 14.5f;
         float MaxZ = 27;
 
-        float x = Random.Range(MinX, MaxX);
-        float z = Random.Range(MinZ, MaxZ);
+        for (var i = 0; i < numDoctors; i++)
+        {
+            float x = Random.Range(MinX, MaxX);
+            float z = Random.Range(MinZ, MaxZ);
 
-        print("doc" + new Vector3(x, .5f, z));
-        var agent = Instantiate(DoctorPrefab, new Vector3(x, .5f, z), Quaternion.identity);
+            print("doc" + new Vector3(x, .5f, z));
+            var agent = Instantiate(DoctorPrefab, new Vector3(x, .5f, z), Quaternion.identity);
 
-        agent.transform.parent = parent.transform;
+            agent.transform.parent = parent.transform;
 
-        doctors.Add(agent);
+            doctors.Add(agent);
+        }
+
 
     }
     #endregion
@@ -97,12 +109,19 @@ public class DoctorBT : MonoBehaviour
         Val<Vector3> position = Val.V(() => target.position);
         return new Sequence(doctors[0].GetComponent<BehaviorMecanim>().Node_GoTo(position), new LeafWait(1000));
     }
+    protected virtual RunStatus InfiniteLoop()
+    {
+        // for each doctor in manager.assigned doctor -> send them to patient. it's a dictionary.
+        return RunStatus.Success;
+    }
     protected Node BuildTreeRoot()
     {
-        Node roaming = new Sequence(
-                        //this.ST_ApproachAndWait(doctors[0], GameObject.Find("Lobby").transform),
-                        goToInfectedBed(),
-                        new LeafWait(5000));
+        //success condition for decorator ^^^^ = restart from beginning
+        Node roaming = new DecoratorLoop(
+                         new LeafInvoke(() => InfiniteLoop())
+                         );
+        //goToInfectedBed(),
+
         /* new DecoratorLoop(
              new Sequence(this.PickUp(participant), this.PutDown(participant)))
          );*/
@@ -110,14 +129,16 @@ public class DoctorBT : MonoBehaviour
     }
 
     // Walks to infected patients bed one by one
-    private Node goToInfectedBed() {
+    private Node goToInfectedBed()
+    {
 
-      var seq = new Sequence();
+        var seq = new Sequence();
 
-      for(int i=0; i<14;i++) {
-        seq.Children.Add(this.ST_ApproachAndWait(doctors[0], GameObject.Find("Beds/bed " + "(" + i + ")").transform));
-      }
+        for (int i = 0; i < 14; i++)
+        {
+            seq.Children.Add(this.ST_ApproachAndWait(doctors[0], GameObject.Find("Beds/bed " + "(" + i + ")").transform));
+        }
 
-      return seq;
+        return seq;
     }
 }
