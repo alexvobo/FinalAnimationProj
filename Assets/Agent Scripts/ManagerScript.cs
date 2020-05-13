@@ -25,6 +25,7 @@ public class ManagerScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        // This runs until both doctor and nurse queues are assigned to.
         if (!nursesDocsSet)
             setNursesDocs();
 
@@ -55,8 +56,9 @@ public class ManagerScript : MonoBehaviour
     {
         var doctorbt = GameObject.Find("Updater").GetComponent<DoctorBT>().doctors;
         var nursebt = GameObject.Find("Updater").GetComponent<NurseBT>().nurses;
+
         var counter = 0;
-        print(GameObject.Find("Updater").GetComponent<DoctorBT>().doctors);
+
         if (doctorbt.Count > 0)
         {
             foreach (var d in doctorbt)
@@ -184,51 +186,6 @@ public class ManagerScript : MonoBehaviour
     public void assignStaff()
     {
         StartCoroutine(assignNurseDoc());
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-
-        if (other.gameObject.CompareTag("Infected"))
-        {
-            print("Detected " + other.gameObject);
-            addInfected(other.gameObject);
-
-
-        }
-        else if (other.gameObject.CompareTag("Normal"))
-        {
-            print("Detected " + other.gameObject);
-            addNormal(other.gameObject);
-
-        }
-    }
-    private void OnTriggerExit(Collider other)
-    {
-
-        if (other.gameObject.CompareTag("Infected"))
-        {
-            try
-            {
-                print("removing " + other.gameObject);
-
-                activeDoctors.Remove(other.gameObject.GetComponent<agentProperties>().assignedDoctor);
-                activeNurses.Remove(other.gameObject.GetComponent<agentProperties>().assignedNurse);
-            }
-            catch { }
-
-
-        }
-        else if (other.gameObject.CompareTag("Normal"))
-        {
-            try
-            {
-                print("removing " + other.gameObject);
-
-                activeDoctors.Remove(other.gameObject.GetComponent<agentProperties>().assignedDoctor);
-                activeNurses.Remove(other.gameObject.GetComponent<agentProperties>().assignedNurse);
-            }
-            catch { }
-        }
     }
 
     #endregion

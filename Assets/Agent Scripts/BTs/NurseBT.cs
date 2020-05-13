@@ -26,10 +26,6 @@ public class NurseBT : MonoBehaviour
         BehaviorManager.Instance.Register(behaviorAgent);
         behaviorAgent.StartBehavior();
     }
-    public List<GameObject> GetNurses()
-    {
-        return nurses;
-    }
     #region Spawn Agents
     public void spawnAgent()
     {
@@ -46,7 +42,7 @@ public class NurseBT : MonoBehaviour
             float x = Random.Range(MinX, MaxX);
             float z = Random.Range(MinZ, MaxZ);
 
-            print("nurs" + new Vector3(x, .5f, z));
+            //print("nurs" + new Vector3(x, .5f, z));
 
             var agent = Instantiate(NursePrefab, new Vector3(x, 0f, z), Quaternion.identity);
 
@@ -110,15 +106,34 @@ public class NurseBT : MonoBehaviour
     }
     protected virtual RunStatus PatientAvailable()
     {
-      
-            return RunStatus.Success;
+        /*  if (manager.activeNurses.Count > 0)
+          {
+              return RunStatus.Failure;
+          }
+          else
+          {
+              return RunStatus.Success;
+          }*/
+        return RunStatus.Failure;
+
     }
+    protected Node SendNursesToPatients()
+    {
+        Sequence seq = new Sequence();
+        foreach (var n in manager.activeNurses.Keys)
+        {
+            //SEND ALL NURSES TO BOUND PATIENTS.
+            seq.Children.Add(ST_ApproachAndWait(n, manager.activeNurses[n].transform));
+        }
+        return seq;
+    }
+
     protected Node BuildTreeRoot()
     {
-        //success condition for decorator ^^^^ = restart from beginning
-        Node roaming = new DecoratorLoop(
+        ////NURSES AND DOCTORS ONLY MOVE WHEN ASSIGNED. SEE MANAGER SCRIPT (activenurses,activedoctors)
+        Node roaming = new Sequence(new DecoratorLoop(
                          new LeafInvoke(() => PatientAvailable())
-                         );
+                         ),SendNursesToPatients());
         //goToInfectedBed(),
 
         /* new DecoratorLoop(

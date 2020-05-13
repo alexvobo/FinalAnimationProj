@@ -13,17 +13,15 @@ public class NormalBT : MonoBehaviour
     private List<GameObject> patients;
     public int numPatients;
     public long spawnRate;
-    public int maxPatients;
     private BehaviorAgent behaviorAgent;
-    public int index;
 
     private ManagerScript manager;
 
     // Use this for initialization
     void Start()
     {
-        index = 0;
-        numPatients = maxPatients = 3;
+
+        numPatients= 3;
         spawnRate = 5;
         patients = new List<GameObject>();
         manager = GameObject.Find("Manager").GetComponent<ManagerScript>();
@@ -44,7 +42,7 @@ public class NormalBT : MonoBehaviour
     {
         for (var i = 0; i < numPatients; i++)
         {
-            print("spawning");
+            //print("spawning");
             GameObject parent = GameObject.Find("Agents");
             GameObject spawn = GameObject.Find("spawnNormal");
 
@@ -70,13 +68,6 @@ public class NormalBT : MonoBehaviour
         }
     }
 
-    /*    public GameObject popAgent()
-        {
-            var agent = patients[index];
-            index++;
-            agent.SetActive(true);
-            return agent;
-        }*/
     #endregion
     #region IK related function
     /* protected Node PickUp(GameObject p)
@@ -124,24 +115,6 @@ public class NormalBT : MonoBehaviour
     #endregion
 
 
-    /*  public Node Node_AgentIsBlocking()
-      {
-          // Check if an agent is blocking the spawn
-          return new LeafInvoke(() => this.isSpawned());
-
-      }
-      public virtual RunStatus isBlocking()
-      {
-          foreach (var p in patients)
-          {
-              if (p.transform == lastSpawnLoc)
-              {
-                  return RunStatus.Running;
-              }
-          }
-          return RunStatus.Failure;
-      }
-  */
     #region movement
     protected Node ST_ApproachAndWait(GameObject patient, Transform target)
     {

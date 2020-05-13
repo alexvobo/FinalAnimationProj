@@ -28,10 +28,6 @@ public class DoctorBT : MonoBehaviour
         BehaviorManager.Instance.Register(behaviorAgent);
         behaviorAgent.StartBehavior();
     }
-    public List<GameObject> GetDoctors()
-    {
-        return doctors;
-    }
     #region Spawn Agents
     public void spawnAgent()
     {
@@ -48,7 +44,7 @@ public class DoctorBT : MonoBehaviour
             float x = Random.Range(MinX, MaxX);
             float z = Random.Range(MinZ, MaxZ);
 
-            print("doc" + new Vector3(x, .5f, z));
+            //print("doc" + new Vector3(x, .5f, z));
             var agent = Instantiate(DoctorPrefab, new Vector3(x, .5f, z), Quaternion.identity);
 
             agent.transform.parent = parent.transform;
@@ -109,9 +105,20 @@ public class DoctorBT : MonoBehaviour
         Val<Vector3> position = Val.V(() => target.position);
         return new Sequence(doctors[0].GetComponent<BehaviorMecanim>().Node_GoTo(position), new LeafWait(1000));
     }
+
+    protected Node SendDocsToPatients()
+    {
+        Sequence seq = new Sequence();
+        foreach (var d in manager.activeDoctors.Keys)
+        {
+            //SEND ALL DOCTORS TO PATIENTS.
+            seq.Children.Add(ST_ApproachAndWait(d, manager.activeDoctors[d].transform));
+        }
+        return seq;
+    }
     protected virtual RunStatus InfiniteLoop()
     {
-        // for each doctor in manager.assigned doctor -> send them to patient. it's a dictionary.
+        //TEMP I FORGOT WHAT TO PUT HERE.
         return RunStatus.Success;
     }
     protected Node BuildTreeRoot()

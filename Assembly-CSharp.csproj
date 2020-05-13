@@ -68,6 +68,8 @@
     <Compile Include="Assets\Agent Scripts\BTs\NormalBT.cs" />
     <Compile Include="Assets\Agent Scripts\BTs\NurseBT.cs" />
     <Compile Include="Assets\Agent Scripts\doorProperties.cs" />
+    <Compile Include="Assets\Agent Scripts\enterTrigger.cs" />
+    <Compile Include="Assets\Agent Scripts\exitTrigger.cs" />
     <Compile Include="Assets\Agent Scripts\floatingOrb.cs" />
     <Compile Include="Assets\Agent Scripts\List.cs" />
     <Compile Include="Assets\Agent Scripts\ManagerScript.cs" />
