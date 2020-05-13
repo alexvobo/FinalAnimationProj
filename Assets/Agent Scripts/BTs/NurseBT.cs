@@ -108,4 +108,66 @@ public class NurseBT : MonoBehaviour
          );*/
         return roaming;
     }
+
+    private Node goToInfectedPatientBed() {
+      var seq = new Sequence(
+      this.ST_ApproachAndWait(nurses[0], GameObject.Find("Beds/bed").transform),
+      new LeafWait(2)
+      );
+
+      return seq;
+    }
+
+    private Node goToNormalPatientBed() {
+      var seq = new Sequence(
+      this.ST_ApproachAndWait(nurses[0], GameObject.Find("Big Room/bed").transform),
+      new LeafWait(2)
+      );
+
+      return seq;
+    }
+
+    private Node goToLounge() {
+      var seq = new Sequence(
+      this.ST_ApproachAndWait(nurses[0], GameObject.Find("Employee Lounge").transform),
+      new LeafWait(2)
+      );
+
+      return seq;
+    }
+
+    private Node exitHospital() {
+      var seq = new Sequence(
+      this.ST_ApproachAndWait(nurses[0], GameObject.Find("ExitHospital").transform),
+      new LeafWait(2)
+      );
+
+      return seq;
+    }
+
+// Check infection
+// If Patient is infected
+//    Nurse takes patient to COVID area
+// If Patient is NOT infected
+//    Nurse takes patient to regular area
+    private Node checkInfection() {
+
+      var seq = new Sequence();
+
+// need to synchronize patients
+      // if(patients[0].GetComponent<agentProperties>().CompareTag("Infected")) {
+      //     return new Sequence(
+      //     goToInfectedPatientBed(),
+      //     new LeafWait(2)
+      //     );
+      // } else {
+      //   return new Sequence(
+      //    goToNormalPatientBed(),
+      //    new LeafWait(2)
+      //   );
+      // }
+
+      return null;
+
+    }
 }

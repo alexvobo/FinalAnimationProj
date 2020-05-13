@@ -92,10 +92,30 @@ public class InfectedBT : MonoBehaviour
     {
         Node roaming = new Sequence(
                         this.ST_ApproachAndWait(patients[0], GameObject.Find("Lobby").transform),
-                        new LeafWait(5000));
+                        goToInfectedSection()
+                        );
         /* new DecoratorLoop(
              new Sequence(this.PickUp(participant), this.PutDown(participant)))
          );*/
         return roaming;
+    }
+
+    private Node goToInfectedSection() {
+      var seq = new Sequence(
+      this.ST_ApproachAndWait(patients[0], GameObject.Find("Beds/bed (0)").transform),
+      //new LeafWait(2),
+      exitHospital()
+      );
+
+      return seq;
+    }
+
+    private Node exitHospital() {
+      var seq = new Sequence(
+      this.ST_ApproachAndWait(patients[0], GameObject.Find("ExitHospital").transform),
+      new LeafWait(2)
+      );
+
+      return seq;
     }
 }

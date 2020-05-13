@@ -100,11 +100,24 @@ public class DoctorBT : MonoBehaviour
     protected Node BuildTreeRoot()
     {
         Node roaming = new Sequence(
-                        this.ST_ApproachAndWait(doctors[0], GameObject.Find("Lobby").transform),
+                        //this.ST_ApproachAndWait(doctors[0], GameObject.Find("Lobby").transform),
+                        goToInfectedBed(),
                         new LeafWait(5000));
         /* new DecoratorLoop(
              new Sequence(this.PickUp(participant), this.PutDown(participant)))
          );*/
         return roaming;
+    }
+
+    // Walks to infected patients bed one by one
+    private Node goToInfectedBed() {
+
+      var seq = new Sequence();
+
+      for(int i=0; i<14;i++) {
+        seq.Children.Add(this.ST_ApproachAndWait(doctors[0], GameObject.Find("Beds/bed " + "(" + i + ")").transform));
+      }
+
+      return seq;
     }
 }

@@ -98,4 +98,23 @@ public class NormalBT : MonoBehaviour
                         );*/
         return roaming;
     }
+
+    private Node goToInfectedSection() {
+      var seq = new Sequence(
+      this.ST_ApproachAndWait(patients[0], GameObject.Find("Big Room/bed (0)").transform),
+      //new LeafWait(2),
+      exitHospital()
+      );
+
+      return seq;
+    }
+
+    private Node exitHospital() {
+      var seq = new Sequence(
+      this.ST_ApproachAndWait(patients[0], GameObject.Find("ExitHospital").transform),
+      new LeafWait(2)
+      );
+
+      return seq;
+    }
 }
